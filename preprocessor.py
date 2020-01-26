@@ -60,7 +60,7 @@ print(sredsum/len(text3))
 #collocations
 text4 = nltk.Text(text3)
 print("|| collocations ||")
-print(text4.collocations())
+print(text4.collocation_list())
 
 #fog-index
 fog= (textstat.gunning_fog(text0))
