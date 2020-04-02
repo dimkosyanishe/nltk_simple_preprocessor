@@ -2,6 +2,7 @@ import os
 import nltk
 from nltk import FreqDist
 from nltk.text import Text
+from nltk.corpus import stopwords
 import pymorphy2
 import re
 from pathlib import Path
@@ -9,12 +10,14 @@ import textstat
 from nltk.tokenize import word_tokenize
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import RegexpTokenizer
+from lexical_diversity import lex_div as ld
 import tkinter
 import tkinter as tk
 from tkinter import*
 from tkinter.ttk import *
 from tkinter import scrolledtext
 morph = pymorphy2.MorphAnalyzer()
+stop_words=set(stopwords.words('english'))
 
 #Creating a window
 window = Tk()
@@ -54,14 +57,14 @@ sv4 = StringVar()
 r4 = tkinter.Entry(window, width=28, textvariable=sv4)
 r4.place(x=577, y=220)
 
-#lexical richness
-tk.Label(window, text="Lexical richness:", bg='#dbfcfe').place(x=577, y=250)
+#lexical diversity
+tk.Label(window, text="Lexical diversity:", bg='#dbfcfe').place(x=577, y=250)
 sv5 = StringVar()
 r5 = tkinter.Entry(window, width=28, textvariable=sv5)
 r5.place(x=577, y=270)
 
 #syntactical complexity
-tk.Label(window, text="Syntactical complexity:", bg='#dbfcfe').place(x=783.5, y=250)
+tk.Label(window, text="Syntactic complexity:", bg='#dbfcfe').place(x=783.5, y=250)
 sv6 = StringVar()
 r6 = tkinter.Entry(window, width=28, textvariable=sv6)
 r6.place(x=783.5, y=270)
@@ -109,7 +112,8 @@ def Launch():
     textnoart = text2.count("a") + text2.count("an") + text2.count("the") + text2.count( "A") + text2.count("An") + text2.count("The")
     textlennoart= len(text2)- textnoart
     sv4.set(textlennoart)
-    lexrich=((len(set(tokens)))/(len(tokens)))*100
+    fle=ld.flemmatize(text1)
+    lexrich=ld.mtld(fle)
     sv5.set(lexrich)
     sentok = sent_tokenize(text1)
     lensentok=len(sentok)
@@ -131,13 +135,14 @@ def freqdistfn():
     text1=textArea.get('1.0', END)
     tokenizer = RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text1)
-    text2=[]
+    textF=[]
     for word in tokens:
-        p = morph.parse(word)[0]
-        wordx=p.normal_form
-        text2.append(wordx)
-    fdist = FreqDist(text2)
-    print(fdist.plot(50))
+        if word not in stop_words:
+            p = morph.parse(word)[0]
+            wordx=p.normal_form
+            textF.append(wordx)
+    fdist1 = FreqDist(textF)
+    print(fdist1.plot(50))
 
 #Launch the function button       
 btn = tk.Button (window, text= "Launch", bg="#8EC760", width=13, command=Launch)
