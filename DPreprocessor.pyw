@@ -93,7 +93,6 @@ ta11 = Text(window, height=12, width=47)
 ta11.place(x=577, y=370)
 
 def Launch():
-    #СИНТАКСИЧЕСКОЕ РАЗНООБРАЗИЕ СЧИТАЕМ УНИКАЛЬНЫЕ СЛОВА ИЛИ ВООБЩЕ ВСЕ?#
     text1=textArea.get('1.0', END)
     tokenizer = RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text1)
